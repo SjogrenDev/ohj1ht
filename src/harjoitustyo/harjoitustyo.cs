@@ -87,6 +87,7 @@ public class harjoitustyo : PhysicsGame
         pelaaja.Y = Level.Bottom + 50;
         pelaaja.Restitution = 0;
         pelaaja.Mass = 1000;
+        pelaaja.CanRotate = false;
 
         Add(pelaaja);
     }
