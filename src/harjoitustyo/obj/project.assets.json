@@ -1383,19 +1383,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/veetisjogren/.nuget/packages/": {}
+    "C:\\Users\\sjogr\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/veetisjogren/Desktop/ohj1ht/src/harjoitustyo/harjoitustyo.csproj",
+      "projectUniqueName": "C:\\Users\\sjogr\\Desktop\\projektit\\ohj1ht\\src\\harjoitustyo\\harjoitustyo.csproj",
       "projectName": "harjoitustyo",
-      "projectPath": "/Users/veetisjogren/Desktop/ohj1ht/src/harjoitustyo/harjoitustyo.csproj",
-      "packagesPath": "/Users/veetisjogren/.nuget/packages/",
-      "outputPath": "/Users/veetisjogren/Desktop/ohj1ht/src/harjoitustyo/obj/",
+      "projectPath": "C:\\Users\\sjogr\\Desktop\\projektit\\ohj1ht\\src\\harjoitustyo\\harjoitustyo.csproj",
+      "packagesPath": "C:\\Users\\sjogr\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sjogr\\Desktop\\projektit\\ohj1ht\\src\\harjoitustyo\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/veetisjogren/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\sjogr\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -1448,15 +1448,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.23, 8.0.23]"
+            "version": "[8.0.22, 8.0.22]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
-            "version": "[8.0.23, 8.0.23]"
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[8.0.22, 8.0.22]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.23, 8.0.23]"
+            "version": "[8.0.22, 8.0.22]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
           }
         ],
         "frameworkReferences": {
@@ -1464,7 +1468,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

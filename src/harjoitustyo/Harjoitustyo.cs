@@ -9,43 +9,43 @@ using Jypeli.Widgets;
 /// @author Sjogren
 /// @version 1.0
 /// </summary>
-public class harjoitustyo : PhysicsGame
+public class Harjoitustyo : PhysicsGame
 {
     //Pelissä käytettävät oliot ja muuttujat
-    PhysicsObject pelaaja;
-    IntMeter pisteLaskuri;
-    Timer mietoAjastin;
-    Timer vakevaAjastin;
-    bool peliOhi = false;
-    Image[] miedotKuvat;
-    Image[] vakevatKuvat;
-    Image pelaajanKuva;
+    private PhysicsObject pelaaja;
+    private IntMeter pisteLaskuri;
+    private Timer mietoAjastin;
+    private Timer vakevaAjastin;
+    private bool peliOhi = false;
+    private Image[] miedotKuvat;
+    private Image[] vakevatKuvat;
+    private Image pelaajanKuva;
     
     //Pelissä käytettävät vakiot
-    const double MIEDON_JUOMAN_NOPEUS = -400;
-    const double VAKEVAN_JUOMAN_NOPEUS = -500;
-    const double JUOMAN_LEVEYS = 50;
-    const double JUOMAN_KORKEUS = 90;
+    private const double MIEDON_JUOMAN_NOPEUS = -400;
+    private const double VAKEVAN_JUOMAN_NOPEUS = -500;
+    private const double JUOMAN_LEVEYS = 50;
+    private const double JUOMAN_KORKEUS = 90;
+    
+    //Pelissä käytettävät kuvat
+    private string[] MIEDOT_JUOMAT = { "ananas", "harmaa", "lemonade", "raspberry", "paaryna", "lime", "vadelma" };
+    private string[] VAKEVAT_JUOMAT = { "tapio", "minttu", "sviina" };
 
     public override void Begin()
     {
-        miedotKuvat = new Image[]
+        miedotKuvat = new Image[MIEDOT_JUOMAT.Length];
+        vakevatKuvat = new Image[VAKEVAT_JUOMAT.Length];
+        
+        //Ladataan kuvat käyttäen juomat taulukkoja
+        for (int i = 0; i < MIEDOT_JUOMAT.Length; i++)
         {
-            LoadImage("ananas"),
-            LoadImage("harmaa"),
-            LoadImage("lemonade"),
-            LoadImage("raspberry"),
-            LoadImage("paaryna"),
-            LoadImage("lime"),
-            LoadImage("vadelma")
-        };
-
-        vakevatKuvat = new Image[]
+            miedotKuvat[i] = LoadImage(MIEDOT_JUOMAT[i]);
+        }
+            
+        for (int i = 0; i < VAKEVAT_JUOMAT.Length; i++)
         {
-            LoadImage("tapio"),
-            LoadImage("minttu"),
-            LoadImage("sviina")
-        };
+            vakevatKuvat[i] = LoadImage(VAKEVAT_JUOMAT[i]);
+        }
 
         pelaajanKuva = LoadImage("hahmo");
         
@@ -62,7 +62,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Luo pelin kentän, joka on 800x600 pikseliä ja taustaväriltään vaaleansininen.
     /// </summary>
-    void LuoKentta()
+    private void LuoKentta()
     {
         Level.Width = 800;
         Level.Height = 600;
@@ -79,7 +79,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Luo pelaajan kentälle.
     /// </summary>
-    void LuoPelaaja()
+    private void LuoPelaaja()
     {
         pelaaja = new PhysicsObject(100, 150);
         pelaaja.Image = pelaajanKuva;
@@ -154,7 +154,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Aloittaa kaksi ajastinta, jotka luovat mietoja ja vahvoja juomia satunnaisilla sijainneilla kentän yläreunaan.
     /// </summary>
-    void AloitaAjastimet()
+    private void AloitaAjastimet()
     {
         mietoAjastin = new Timer();
         mietoAjastin.Interval = 1.0;
@@ -170,7 +170,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Luo mietoja juomia, jotka putoavat kentän yläreunasta. Pelaaja saa pisteen kerättyään miedon juoman.
     /// </summary>
-    void LuoMietoJuoma()
+    private void LuoMietoJuoma()
     {
         PhysicsObject juoma = new PhysicsObject(JUOMAN_LEVEYS, JUOMAN_KORKEUS);
         juoma.Image = RandomGen.SelectOne(miedotKuvat);
@@ -187,7 +187,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Luo vahvoja juomia, jotka putoavat kentän yläreunasta. Peli päättyy, jos pelaaja osuu vahvaan juomaan.
     /// </summary>
-    void LuoVakevaJuoma()
+    private void LuoVakevaJuoma()
     {
         PhysicsObject juoma = new PhysicsObject(JUOMAN_LEVEYS, JUOMAN_KORKEUS);
         juoma.Image = RandomGen.SelectOne(vakevatKuvat);
@@ -207,13 +207,13 @@ public class harjoitustyo : PhysicsGame
     /// </summary>
     /// <param name="juoma">Juoma, johon pelaaja osui.</param>
     /// <param name="kohde">Kohde, johon pelaaja osui (tässä tapauksessa pelaaja itse).</param>
-    void Osuma(PhysicsObject juoma, PhysicsObject kohde)
+    private void Osuma(PhysicsObject juoma, PhysicsObject kohde)
     {
         if (kohde != pelaaja || peliOhi) return;
 
         if (juoma.Tag.ToString() == "mieto")
         {
-            pisteLaskuri.Value += 1;
+            pisteLaskuri.Value = LaskePisteet(pisteLaskuri.Value);
             juoma.Destroy();
         }
         else if (juoma.Tag.ToString() == "vakeva")
@@ -229,11 +229,21 @@ public class harjoitustyo : PhysicsGame
             NaytaValikko();
         }
     }
+
+    /// <summary>
+    /// Palauttaa pelaajan uudet pisteet.
+    /// </summary>
+    /// <param name="pisteet">Pelaajan pisteiden nykytilanne</param>
+    /// <returns>Uudet pisteet</returns>
+    private static int LaskePisteet(int pisteet)
+    {
+        return pisteet + 1;
+    }
     
     /// <summary>
     /// Näyttää valikon pelin päätyttyä, jossa pelaaja näkee keräämänsä pisteet ja voi valita aloittaa uudelleen tai lopettaa pelin.
     /// </summary>
-    void NaytaValikko()
+    private void NaytaValikko()
     {
         MultiSelectWindow valikko = new MultiSelectWindow(
             
@@ -251,7 +261,7 @@ public class harjoitustyo : PhysicsGame
     /// <summary>
     /// Aloittaa pelin uudelleen tyhjentämällä kentän, nollaamalla pisteet ja käynnistämällä pelin alusta.
     /// </summary>
-    void AloitaUudelleen()
+    private void AloitaUudelleen()
     {
         ClearAll();
         peliOhi = false;
