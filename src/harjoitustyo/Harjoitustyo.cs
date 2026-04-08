@@ -75,6 +75,7 @@ public class Harjoitustyo : PhysicsGame
         PhysicsObject oikeaReuna = Level.CreateRightBorder();
         oikeaReuna.Restitution = 0;
     }
+    
 
     /// <summary>
     /// Luo pelaajan kentälle.
@@ -91,6 +92,7 @@ public class Harjoitustyo : PhysicsGame
 
         Add(pelaaja);
     }
+    
 
     /// <summary>
     /// Lisää näppäimistöohjaimet pelaajan liikuttamiseen vasemmalle ja oikealle.
@@ -103,6 +105,7 @@ public class Harjoitustyo : PhysicsGame
         Keyboard.Listen(Key.Left, ButtonState.Down, Liikuta, null, -300.0);
         Keyboard.Listen(Key.Right, ButtonState.Down, Liikuta, null, 300.0);
     }
+    
 
     /// <summary>
     /// Liikuttaa pelaajaa vasemmalle tai oikealle määritellyllä nopeudella.
@@ -112,6 +115,7 @@ public class Harjoitustyo : PhysicsGame
     {
         pelaaja.Velocity = new Vector(nopeus, 0);
     }
+    
 
     /// <summary>
     /// Luo pistelaskurin, joka näyttää pelaajan keräämät pisteet.
@@ -150,6 +154,7 @@ public class Harjoitustyo : PhysicsGame
         pisteNaytto.Font = Font.DefaultBold;
         Add(pisteNaytto);
     }
+    
 
     /// <summary>
     /// Aloittaa kaksi ajastinta, jotka luovat mietoja ja vahvoja juomia satunnaisilla sijainneilla kentän yläreunaan.
@@ -166,6 +171,7 @@ public class Harjoitustyo : PhysicsGame
         vakevaAjastin.Timeout += LuoVakevaJuoma;
         vakevaAjastin.Start();
     }
+    
 
     /// <summary>
     /// Luo mietoja juomia, jotka putoavat kentän yläreunasta. Pelaaja saa pisteen kerättyään miedon juoman.
@@ -183,6 +189,7 @@ public class Harjoitustyo : PhysicsGame
         Add(juoma);
         AddCollisionHandler(juoma, Osuma);
     }
+    
 
     /// <summary>
     /// Luo vahvoja juomia, jotka putoavat kentän yläreunasta. Peli päättyy, jos pelaaja osuu vahvaan juomaan.
@@ -200,6 +207,7 @@ public class Harjoitustyo : PhysicsGame
         Add(juoma);
         AddCollisionHandler(juoma, Osuma);
     }
+    
 
     /// <summary>
     /// Käsittelee osuman pelaajan ja juoman välillä. Jos pelaaja osuu miedon juoman kanssa, pelaaja saa pisteen ja juoma tuhoutuu.
@@ -229,6 +237,7 @@ public class Harjoitustyo : PhysicsGame
             NaytaValikko();
         }
     }
+    
 
     /// <summary>
     /// Palauttaa pelaajan uudet pisteet.
@@ -239,6 +248,7 @@ public class Harjoitustyo : PhysicsGame
     {
         return pisteet + 1;
     }
+    
     
     /// <summary>
     /// Näyttää valikon pelin päätyttyä, jossa pelaaja näkee keräämänsä pisteet ja voi valita aloittaa uudelleen tai lopettaa pelin.
@@ -257,6 +267,7 @@ public class Harjoitustyo : PhysicsGame
 
         Add(valikko);
     }
+    
     
     /// <summary>
     /// Aloittaa pelin uudelleen tyhjentämällä kentän, nollaamalla pisteet ja käynnistämällä pelin alusta.
