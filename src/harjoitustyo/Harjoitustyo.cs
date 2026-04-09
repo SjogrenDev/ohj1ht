@@ -1,8 +1,4 @@
-using System;
 using Jypeli;
-using Jypeli.Assets;
-using Jypeli.Controls;
-using Jypeli.Widgets;
 
 /// <summary>
 /// Viinaralli, jossa pelaaja kerää mietoja juomia ja välttää vahvoja juomia.
@@ -20,13 +16,13 @@ public class Harjoitustyo : PhysicsGame
     private Image[] miedotKuvat;
     private Image[] vakevatKuvat;
     private Image pelaajanKuva;
-    
+
     //Pelissä käytettävät vakiot
     private const double MIEDON_JUOMAN_NOPEUS = -400;
     private const double VAKEVAN_JUOMAN_NOPEUS = -500;
     private const double JUOMAN_LEVEYS = 50;
     private const double JUOMAN_KORKEUS = 90;
-    
+
     //Pelissä käytettävät kuvat
     private string[] MIEDOT_JUOMAT = { "ananas", "harmaa", "lemonade", "raspberry", "paaryna", "lime", "vadelma" };
     private string[] VAKEVAT_JUOMAT = { "tapio", "minttu", "sviina" };
@@ -35,20 +31,20 @@ public class Harjoitustyo : PhysicsGame
     {
         miedotKuvat = new Image[MIEDOT_JUOMAT.Length];
         vakevatKuvat = new Image[VAKEVAT_JUOMAT.Length];
-        
+
         //Ladataan kuvat käyttäen juomat taulukkoja
         for (int i = 0; i < MIEDOT_JUOMAT.Length; i++)
         {
             miedotKuvat[i] = LoadImage(MIEDOT_JUOMAT[i]);
         }
-            
+
         for (int i = 0; i < VAKEVAT_JUOMAT.Length; i++)
         {
             vakevatKuvat[i] = LoadImage(VAKEVAT_JUOMAT[i]);
         }
 
         pelaajanKuva = LoadImage("hahmo");
-        
+
         LuoKentta();
         LuoPelaaja();
         LuoPistelaskuri();
@@ -67,7 +63,7 @@ public class Harjoitustyo : PhysicsGame
         Level.Width = 800;
         Level.Height = 600;
         Level.BackgroundColor = Color.LightBlue;
-        
+
         //Lisätään reunat oikealle ja vasemmalle
         PhysicsObject vasenReuna = Level.CreateLeftBorder();
         vasenReuna.Restitution = 0;
@@ -75,7 +71,7 @@ public class Harjoitustyo : PhysicsGame
         PhysicsObject oikeaReuna = Level.CreateRightBorder();
         oikeaReuna.Restitution = 0;
     }
-    
+
 
     /// <summary>
     /// Luo pelaajan kentälle.
@@ -92,7 +88,7 @@ public class Harjoitustyo : PhysicsGame
 
         Add(pelaaja);
     }
-    
+
 
     /// <summary>
     /// Lisää näppäimistöohjaimet pelaajan liikuttamiseen vasemmalle ja oikealle.
@@ -105,7 +101,7 @@ public class Harjoitustyo : PhysicsGame
         Keyboard.Listen(Key.Left, ButtonState.Down, Liikuta, null, -300.0);
         Keyboard.Listen(Key.Right, ButtonState.Down, Liikuta, null, 300.0);
     }
-    
+
 
     /// <summary>
     /// Liikuttaa pelaajaa vasemmalle tai oikealle määritellyllä nopeudella.
@@ -115,7 +111,7 @@ public class Harjoitustyo : PhysicsGame
     {
         pelaaja.Velocity = new Vector(nopeus, 0);
     }
-    
+
 
     /// <summary>
     /// Luo pistelaskurin, joka näyttää pelaajan keräämät pisteet.
@@ -132,7 +128,7 @@ public class Harjoitustyo : PhysicsGame
         pelinNimi.Color = Color.Transparent;
         pelinNimi.Font = Font.DefaultBold;
         Add(pelinNimi);
-        
+
         //LIsätään teksti ennen pistelaskuria
         Label pisteTeksti = new Label("PISTEET:");
         pisteTeksti.X = Screen.Right - 110;
@@ -141,10 +137,10 @@ public class Harjoitustyo : PhysicsGame
         pisteTeksti.Color = Color.Transparent;
         pisteTeksti.Font = Font.DefaultBold;
         Add(pisteTeksti);
-        
+
         //Lisätään pistelaskuri
         pisteLaskuri = new IntMeter(0);
-        
+
         Label pisteNaytto = new Label();
         pisteNaytto.BindTo(pisteLaskuri);
         pisteNaytto.X = Screen.Right - 55;
@@ -154,7 +150,7 @@ public class Harjoitustyo : PhysicsGame
         pisteNaytto.Font = Font.DefaultBold;
         Add(pisteNaytto);
     }
-    
+
 
     /// <summary>
     /// Aloittaa kaksi ajastinta, jotka luovat mietoja ja vahvoja juomia satunnaisilla sijainneilla kentän yläreunaan.
@@ -163,46 +159,31 @@ public class Harjoitustyo : PhysicsGame
     {
         mietoAjastin = new Timer();
         mietoAjastin.Interval = 1.0;
-        mietoAjastin.Timeout += LuoMietoJuoma;
+        mietoAjastin.Timeout += delegate { LuoJuoma("mieto", MIEDON_JUOMAN_NOPEUS, miedotKuvat);};
         mietoAjastin.Start();
 
         vakevaAjastin = new Timer();
         vakevaAjastin.Interval = 2.0;
-        vakevaAjastin.Timeout += LuoVakevaJuoma;
+        vakevaAjastin.Timeout += delegate { LuoJuoma("vakeva", VAKEVAN_JUOMAN_NOPEUS, vakevatKuvat); };
         vakevaAjastin.Start();
     }
     
 
     /// <summary>
-    /// Luo mietoja juomia, jotka putoavat kentän yläreunasta. Pelaaja saa pisteen kerättyään miedon juoman.
+    /// Luo uusi juoma pelikentällle
     /// </summary>
-    private void LuoMietoJuoma()
+    /// <param name="tag">Juoman tagi, vakeva tai mieto</param>
+    /// <param name="nopeus">Juoman putoamisnopeus</param>
+    /// <param name="kuvat">Käytettävien kuvien taulukko</param>
+    private void LuoJuoma(string tag, double nopeus, Image[] kuvat)
     {
         PhysicsObject juoma = new PhysicsObject(JUOMAN_LEVEYS, JUOMAN_KORKEUS);
-        juoma.Image = RandomGen.SelectOne(miedotKuvat);
+        juoma.Image = RandomGen.SelectOne(kuvat);
         juoma.X = RandomGen.NextDouble(Level.Left, Level.Right);
         juoma.Y = Level.Top;
-        juoma.Tag = "mieto";
+        juoma.Tag = tag;
 
-        juoma.Hit(new Vector(0, MIEDON_JUOMAN_NOPEUS));
-
-        Add(juoma);
-        AddCollisionHandler(juoma, Osuma);
-    }
-    
-
-    /// <summary>
-    /// Luo vahvoja juomia, jotka putoavat kentän yläreunasta. Peli päättyy, jos pelaaja osuu vahvaan juomaan.
-    /// </summary>
-    private void LuoVakevaJuoma()
-    {
-        PhysicsObject juoma = new PhysicsObject(JUOMAN_LEVEYS, JUOMAN_KORKEUS);
-        juoma.Image = RandomGen.SelectOne(vakevatKuvat);
-        juoma.X = RandomGen.NextDouble(Level.Left, Level.Right);
-        juoma.Y = Level.Top;
-        juoma.Tag = "vakeva";
-
-        juoma.Hit(new Vector(0, VAKEVAN_JUOMAN_NOPEUS));
+        juoma.Hit(new Vector(0, nopeus));
 
         Add(juoma);
         AddCollisionHandler(juoma, Osuma);
